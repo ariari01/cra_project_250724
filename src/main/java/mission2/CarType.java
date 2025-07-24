@@ -1,7 +1,6 @@
 package mission2;
 
 public enum CarType {
-    //SEDAN = 1, SUV = 2, TRUCK = 3;
     Sedan(1), SUV(2), Truck(3);
 
     private final int code;

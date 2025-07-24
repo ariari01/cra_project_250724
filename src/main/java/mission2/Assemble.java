@@ -2,6 +2,8 @@ package mission2;
 
 import java.util.Scanner;
 
+import static mission2.delay.ThreadDelay;
+
 public class Assemble {
     private static final String CLEAR_SCREEN = "\033[H\033[2J";
     private static final int INVALID_INPUT = -1;
@@ -20,6 +22,7 @@ public class Assemble {
 
     private static int[] carInfo = new int[5];
     private static final Car car = new Car();
+    private static final CarAssembler assembler = new CarAssembler(car);
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -44,7 +47,7 @@ public class Assemble {
                 continue;
             }
 
-            step = assembleCar(step, answer);
+            step = assembler.assembleCar(step, answer);
         }
 
         sc.close();
@@ -61,12 +64,12 @@ public class Assemble {
 
     private static boolean isValidInput(int answer, int step) {
         if (answer == INVALID_INPUT) {
-            delay(800);
+            ThreadDelay(800);
             return true;
         }
 
         if (!isValidRange(step, answer)) {
-            delay(800);
+            ThreadDelay(800);
             return true;
         }
         return false;
@@ -78,43 +81,6 @@ public class Assemble {
             return true;
         }
         return false;
-    }
-
-    private static int assembleCar(int step, int answer) {
-        switch (step) {
-            case CarType_Q:
-                selectCarType(answer);
-                delay(800);
-                step = Engine_Q;
-                break;
-            case Engine_Q:
-                selectEngine(answer);
-                delay(800);
-                step = BrakeSystem_Q;
-                break;
-            case BrakeSystem_Q:
-                selectBrakeSystem(answer);
-                delay(800);
-                step = SteeringSystem_Q;
-                break;
-            case SteeringSystem_Q:
-                selectSteeringSystem(answer);
-                delay(800);
-                step = Run_Test;
-                break;
-            case Run_Test:
-                if (answer == 1) {
-                    runProducedCar();
-                    delay(2000);
-                } else if (answer == 2) {
-                    System.out.println("Test...");
-                    delay(1500);
-                    testProducedCar();
-                    delay(2000);
-                }
-                break;
-        }
-        return step;
     }
 
     private static void showMenu(int step) {
@@ -232,95 +198,8 @@ public class Assemble {
         return true;
     }
 
-    private static void selectCarType(int carType) {
-        CarType type = CarType.getCarTypefromCode(carType);
-        car.setType(type);
-        System.out.printf("차량 타입으로 %s을 선택하셨습니다.\n", car.getType());
-    }
-
-    private static void selectEngine(int engineType) {
-        EngineType type = EngineType.getEngineTypefromCode(engineType);
-        car.setEngine(type);
-        System.out.printf("%s 엔진을 선택하셨습니다.\n", car.getEngine());
-    }
-
-    private static void selectBrakeSystem(int brakeSystemType) {
-        BrakeSystem type = BrakeSystem.getBrakeTypefromCode(brakeSystemType);
-        car.setBrake(type);
-        System.out.printf("%s 제동장치를 선택하셨습니다.\n", car.getBrake());
-    }
-
-    private static void selectSteeringSystem(int steeringSystemType) {
-        SteeringSystem type = SteeringSystem.getSteeringTypefromCode(steeringSystemType);
-        car.setSteering(type);
-        System.out.printf("%s 조향장치를 선택하셨습니다.\n", car.getSteering());
-    }
-
-
-    private static int getErrorCodeByValidCheck() {
-        if (carInfo[CarType_Q] == SEDAN && carInfo[BrakeSystem_Q] == CONTINENTAL) return 1;
-        if (carInfo[CarType_Q] == SUV && carInfo[Engine_Q] == TOYOTA) return 2;
-        if (carInfo[CarType_Q] == TRUCK && carInfo[Engine_Q] == WIA) return 3;
-        if (carInfo[CarType_Q] == TRUCK && carInfo[BrakeSystem_Q] == MANDO) return 4;
-        if (carInfo[BrakeSystem_Q] == BOSCH_B && carInfo[SteeringSystem_Q] != BOSCH_S) return 5;
-        return COMBINATION_PASS_CODE;
-    }
-
-    private static void runProducedCar() {
-        if (getErrorCodeByValidCheck() != COMBINATION_PASS_CODE) {
-            System.out.println("자동차가 동작되지 않습니다");
-            return;
-        }
-        if (carInfo[Engine_Q] == 4) {
-            System.out.println("엔진이 고장나있습니다.");
-            System.out.println("자동차가 움직이지 않습니다.");
-            return;
-        }
-
-        System.out.printf("Car Type : %s\n", car.getType());
-        System.out.printf("Engine   : %s\n", car.getEngine());
-        System.out.printf("Brake    : %s\n", car.getBrake());
-        System.out.printf("Steering : %s\n", car.getSteering());
-        System.out.println("자동차가 동작됩니다.");
-    }
-
-    private static void testProducedCar() {
-        int errorCode = getErrorCodeByValidCheck();
-
-        if (errorCode == 1) {
-            fail("Sedan에는 Continental제동장치 사용 불가");
-            return;
-        }
-        if (errorCode == 2) {
-            fail("SUV에는 TOYOTA엔진 사용 불가");
-            return;
-        }
-        if (errorCode == 3) {
-            fail("Truck에는 WIA엔진 사용 불가");
-            return;
-        }
-        if (errorCode == 4) {
-            fail("Truck에는 Mando제동장치 사용 불가");
-            return;
-        }
-        if (errorCode == 5) {
-            fail("Bosch제동장치에는 Bosch조향장치 이외 사용 불가");
-            return;
-        }
-
-        System.out.println("자동차 부품 조합 테스트 결과 : PASS");
-    }
-
     private static void fail(String msg) {
         System.out.println("자동차 부품 조합 테스트 결과 : FAIL");
         System.out.println(msg);
-    }
-
-
-    private static void delay(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException ignored) {
-        }
     }
 }
