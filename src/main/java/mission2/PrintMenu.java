@@ -1,6 +1,26 @@
 package mission2;
+import static mission2.AssembleStep.*;
+public class PrintMenu {
+    public static void showMenu(int step) {
+        switch (step) {
+            case CarType_Q:
+                showCarTypeMenu();
+                break;
+            case Engine_Q:
+                showEngineMenu();
+                break;
+            case BrakeSystem_Q:
+                showBrakeMenu();
+                break;
+            case SteeringSystem_Q:
+                showSteeringMenu();
+                break;
+            case Run_Test:
+                showRunTestMenu();
+                break;
+        }
+    }
 
-public class showMenu {
     private static void showCarTypeMenu() {
         System.out.println("        ______________");
         System.out.println("       /|            |");
@@ -50,5 +70,4 @@ public class showMenu {
         System.out.println("2. Test");
         System.out.println("===============================");
     }
-
 }
