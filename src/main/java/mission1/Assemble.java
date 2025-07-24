@@ -39,11 +39,7 @@ public class Assemble {
             if (isValidInput(answer, step)) continue;
 
             if (answer == 0) {
-                if (step == Run_Test) {
-                    step = CarType_Q;
-                } else if (step > CarType_Q) {
-                    step--;
-                }
+                step = getStep(step);
                 continue;
             }
 
@@ -51,6 +47,15 @@ public class Assemble {
         }
 
         sc.close();
+    }
+
+    private static int getStep(int step) {
+        if (step == Run_Test) {
+            step = CarType_Q;
+        } else if (step > CarType_Q) {
+            step--;
+        }
+        return step;
     }
 
     private static boolean isValidInput(int answer, int step) {
