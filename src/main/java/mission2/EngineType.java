@@ -16,8 +16,4 @@ public enum EngineType {
         }
         throw new IllegalArgumentException("Err");
     }
-
-    public int getCode() {
-        return code;
-    }
 }

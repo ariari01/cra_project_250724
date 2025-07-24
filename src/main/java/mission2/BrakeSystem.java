@@ -15,8 +15,4 @@ public enum BrakeSystem {
         }
         throw new IllegalArgumentException("Err");
     }
-
-    public int getCode() {
-        return code;
-    }
 }

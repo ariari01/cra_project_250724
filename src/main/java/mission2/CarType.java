@@ -15,8 +15,4 @@ public enum CarType {
         }
         throw new IllegalArgumentException("Err");
     }
-
-    public int getCode() {
-        return code;
-    }
 }

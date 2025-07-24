@@ -16,8 +16,4 @@ public enum SteeringSystem {
         }
         throw new IllegalArgumentException("Err");
     }
-
-    public int getCode() {
-        return code;
-    }
 }
